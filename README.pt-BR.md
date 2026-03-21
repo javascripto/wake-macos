@@ -1,5 +1,7 @@
 # Wake
 
+[![Workflow de release](https://github.com/javascripto/wake-macos/actions/workflows/release.yml/badge.svg)](https://github.com/javascripto/wake-macos/actions/workflows/release.yml)
+
 Wake é um pequeno app para macOS que mantém o Mac acordado enquanto está ativado.
 
 Ele usa as assertions nativas de gerenciamento de energia do macOS, funciona como um utilitário de barra de menu e inclui um ícone personalizado no bundle `.app`.

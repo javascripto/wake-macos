@@ -1,5 +1,7 @@
 # Wake
 
+[![Release Workflow](https://github.com/javascripto/wake-macos/actions/workflows/release.yml/badge.svg)](https://github.com/javascripto/wake-macos/actions/workflows/release.yml)
+
 Wake is a tiny macOS menu bar app that keeps your Mac awake while it is enabled.
 
 It uses native macOS power assertions, ships as a menu bar utility, and includes a custom app icon in the `.app` bundle.
