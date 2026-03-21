@@ -28,7 +28,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wake-artifacts
-          path: dist/
+          path: |
+            dist/Wake.dmg
+            dist/Wake.app.zip
+          if-no-files-found: error
+          compression-level: 0
 
       - name: Publish GitHub release
         if: startsWith(github.ref, 'refs/tags/')
