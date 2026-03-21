@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:wake}",
+      "name": "Debug Wake",
+      "target": "Wake",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug Wake"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:wake}",
+      "name": "Release Wake",
+      "target": "Wake",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release Wake"
+    }
+  ]
+}
