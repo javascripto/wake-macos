@@ -75,3 +75,4 @@ The GitHub Actions workflow builds the app on macOS and:
 - The menu bar status item still uses SF Symbols in template mode, so it stays monochrome in the menu bar.
 - The generated app is ad-hoc signed locally for easier distribution and packaging.
 - If you want to force a fresh icon build, delete `.build/app-icon/Wake.icns` and run `./scripts/build_app.sh` again.
+- If macOS blocks the downloaded app from opening, run `xattr -dr com.apple.quarantine /Applications/Wake.app` once after installing it.

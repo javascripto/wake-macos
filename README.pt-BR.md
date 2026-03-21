@@ -75,3 +75,4 @@ O workflow do GitHub Actions compila o app no macOS e:
 - O status item na barra de menu continua usando SF Symbols em template mode, então ele fica monocromático na barra.
 - O app gerado é assinado ad-hoc localmente para facilitar distribuição e empacotamento.
 - Se quiser forçar uma nova geração do ícone, apague `.build/app-icon/Wake.icns` e rode `./scripts/build_app.sh` novamente.
+- Se o macOS bloquear o app baixado, rode uma vez após instalar: `xattr -dr com.apple.quarantine /Applications/Wake.app`.
