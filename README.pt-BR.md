@@ -4,7 +4,7 @@ Wake é um pequeno app para macOS que mantém o Mac acordado enquanto está ativ
 
 Ele usa as assertions nativas de gerenciamento de energia do macOS, funciona como um utilitário de barra de menu e inclui um ícone personalizado no bundle `.app`.
 
-Versão em inglês: [README.md](/Users/yuri/repos/wake/README.md)
+Versão em inglês: [README.md](./README.md)
 
 ## Como funciona
 
