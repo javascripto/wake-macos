@@ -3,17 +3,30 @@ import Foundation
 import Darwin
 
 @MainActor
-final class WakeViewModel: ObservableObject {
-    @Published private(set) var isActive = false
-    @Published var isUserActivityEnabled = false
+public protocol WakeControlling {
+    var isActive: Bool { get }
+    func activate(reportUserActivity: Bool)
+    func deactivate()
+}
 
-    private let wakeController = WakeController()
+extension WakeController: WakeControlling {}
 
-    func toggleWake() {
+@MainActor
+public final class WakeViewModel: ObservableObject {
+    @Published public private(set) var isActive = false
+    @Published public var isUserActivityEnabled = false
+
+    private let wakeController: WakeControlling
+
+    public init(wakeController: WakeControlling) {
+        self.wakeController = wakeController
+    }
+
+    public func toggleWake() {
         isActive ? deactivate() : activate()
     }
 
-    func setUserActivityEnabled(_ isEnabled: Bool) {
+    public func setUserActivityEnabled(_ isEnabled: Bool) {
         guard isUserActivityEnabled != isEnabled else { return }
         isUserActivityEnabled = isEnabled
 
@@ -22,24 +35,24 @@ final class WakeViewModel: ObservableObject {
         }
     }
 
-    func activate() {
+    public func activate() {
         wakeController.activate(reportUserActivity: isUserActivityEnabled)
         isActive = wakeController.isActive
     }
 
-    func refreshActivation(reportUserActivity: Bool) {
+    public func refreshActivation(reportUserActivity: Bool) {
         if !isActive { return }
         wakeController.deactivate()
         wakeController.activate(reportUserActivity: reportUserActivity)
         isActive = wakeController.isActive
     }
 
-    func deactivate() {
+    public func deactivate() {
         wakeController.deactivate()
         isActive = wakeController.isActive
     }
 
-    func quit() {
+    public func quit() {
         deactivate()
         Darwin.exit(0)
     }

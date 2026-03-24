@@ -44,7 +44,7 @@ final class WakeStatusItemController: NSObject {
         toggleWakeItem.title = menuState.toggleTitle
         toggleWakeItem.state = menuState.isActive ? .on : .off
         toggleUserActivityItem.title = menuState.userActivityTitle
-        toggleUserActivityItem.state = menuState.isUserActivityEnabled ? .on : .off
+        toggleUserActivityItem.state = menuState.userActivityState
     }
 
     private func configure() {
@@ -58,10 +58,10 @@ final class WakeStatusItemController: NSObject {
             titleItem,
             subtitleItem,
             .separator(),
-            makeMenuItem(title: "", action: #selector(handleToggleWake), item: toggleWakeItem),
-            makeMenuItem(title: "", action: #selector(handleToggleUserActivity), item: toggleUserActivityItem),
+            menuItem(title: "", action: #selector(handleToggleWake), item: toggleWakeItem),
+            menuItem(title: "", action: #selector(handleToggleUserActivity), item: toggleUserActivityItem),
             .separator(),
-            makeMenuItem(title: UI.quitTitle, action: #selector(handleQuit), keyEquivalent: "q", item: quitItem),
+            menuItem(title: UI.quitTitle, action: #selector(handleQuit), keyEquivalent: "q", item: quitItem),
         ]
 
         button.imagePosition = .imageOnly
@@ -103,7 +103,7 @@ final class WakeStatusItemController: NSObject {
     @objc
     private func handleQuit() { onQuit() }
 
-    private func makeMenuItem(
+    private func menuItem(
         title: String,
         action: Selector,
         keyEquivalent: String = "",

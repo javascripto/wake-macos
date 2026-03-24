@@ -2,12 +2,14 @@ import AppKit
 import Combine
 
 @MainActor
-final class WakeAppDelegate: NSObject, NSApplicationDelegate {
-    private let viewModel = WakeViewModel()
+public final class AppDelegate: NSObject, NSApplicationDelegate {
+    private let viewModel = WakeViewModel(wakeController: WakeController())
     private var statusItemController: WakeStatusItemController?
     private var stateCancellable: AnyCancellable?
 
-    func applicationDidFinishLaunching(_ notification: Notification) {
+    public override init() {}
+
+    public func applicationDidFinishLaunching(_ notification: Notification) {
         let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItemController = WakeStatusItemController(
             statusItem: statusItem,
@@ -29,7 +31,7 @@ final class WakeAppDelegate: NSObject, NSApplicationDelegate {
             }
     }
 
-    func applicationWillTerminate(_ notification: Notification) {
+    public func applicationWillTerminate(_ notification: Notification) {
         viewModel.deactivate()
     }
 }
