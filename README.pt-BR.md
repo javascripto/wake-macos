@@ -54,7 +54,6 @@ Ou usar os atalhos do `make`:
 ```bash
 make build
 make run
-make checks
 make dmg
 make release
 ```

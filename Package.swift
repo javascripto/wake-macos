@@ -11,10 +11,6 @@ let package = Package(
             name: "Wake",
             targets: ["WakeApp"]
         ),
-        .executable(
-            name: "WakeChecks",
-            targets: ["WakeChecks"]
-        ),
         .library(
             name: "WakeCore",
             targets: ["WakeCore"]
@@ -29,10 +25,6 @@ let package = Package(
         ),
         .executableTarget(
             name: "WakeApp",
-            dependencies: ["WakeCore"]
-        ),
-        .executableTarget(
-            name: "WakeChecks",
             dependencies: ["WakeCore"]
         ),
     ]
