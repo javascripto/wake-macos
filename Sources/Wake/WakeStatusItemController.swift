@@ -6,8 +6,6 @@ final class WakeStatusItemController: NSObject {
     private enum UI {
         static let activeTooltip = "Wake ativo"
         static let inactiveTooltip = "Wake inativo"
-        static let activeSymbol = "lightbulb.max.fill"
-        static let inactiveSymbol = "lightbulb.slash.fill"
         static let iconSize = NSSize(width: 18, height: 18)
     }
 
@@ -30,10 +28,9 @@ final class WakeStatusItemController: NSObject {
     }
 
     func update(isActive: Bool) {
-        let symbolName = isActive ? UI.activeSymbol : UI.inactiveSymbol
         let tooltip = isActive ? UI.activeTooltip : UI.inactiveTooltip
 
-        if let image = makeStatusImage(symbolName: symbolName, accessibilityDescription: tooltip, iconSize: UI.iconSize) {
+        if let image = WakeStatusIconRenderer.makeImage(isActive: isActive, size: UI.iconSize, accessibilityDescription: tooltip) {
             statusItem.button?.image = image
         }
 
@@ -77,18 +74,5 @@ final class WakeStatusItemController: NSObject {
         }
 
         onToggleWake()
-    }
-
-    private func makeStatusImage(symbolName: String, accessibilityDescription: String, iconSize: NSSize) -> NSImage? {
-        guard let symbol = NSImage(systemSymbolName: symbolName, accessibilityDescription: accessibilityDescription) else {
-            return nil
-        }
-
-        let image = NSImage(size: iconSize)
-        image.lockFocus()
-        symbol.draw(in: NSRect(origin: .zero, size: iconSize))
-        image.unlockFocus()
-        image.isTemplate = true
-        return image
     }
 }

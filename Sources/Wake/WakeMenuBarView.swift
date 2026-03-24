@@ -37,7 +37,7 @@ struct WakeMenuBarView: View {
 
             menuRow(
                 title: toggleTitle,
-                systemImage: "power",
+                icon: .power,
                 action: {
                     model.toggleWake()
                 }
@@ -45,6 +45,7 @@ struct WakeMenuBarView: View {
 
             menuToggleRow(
                 title: "Manter atividade do usuário",
+                icon: .activity,
                 isOn: userActivityBinding
             )
 
@@ -52,7 +53,7 @@ struct WakeMenuBarView: View {
 
             menuRow(
                 title: "Sair",
-                systemImage: "xmark.circle",
+                icon: .quit,
                 role: .destructive,
                 action: {
                     model.quit()
@@ -84,14 +85,14 @@ struct WakeMenuBarView: View {
 
     private func menuRow(
         title: String,
-        systemImage: String,
+        icon: WakeIconKind,
         role: ButtonRole? = nil,
         action: @escaping () -> Void
     ) -> some View {
         Button(role: role, action: action) {
             HStack(spacing: 8) {
-                Image(systemName: systemImage)
-                    .font(.system(size: 12, weight: .regular))
+                WakeIconView(kind: icon)
+                    .frame(width: 14, height: 14)
                     .frame(width: 14, alignment: .leading)
 
                 Text(title)
@@ -113,23 +114,24 @@ struct WakeMenuBarView: View {
         .padding(.vertical, 5)
     }
 
-    private func menuToggleRow(title: String, isOn: Binding<Bool>) -> some View {
+    private func menuToggleRow(title: String, icon: WakeIconKind, isOn: Binding<Bool>) -> some View {
         Button {
             isOn.wrappedValue.toggle()
         } label: {
             HStack(spacing: 8) {
-                Group {
-                    if isOn.wrappedValue {
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 11, weight: .semibold))
-                    }
-                }
-                .frame(width: 14, alignment: .leading)
+                WakeIconView(kind: icon)
+                    .frame(width: 14, height: 14)
+                    .frame(width: 14, alignment: .leading)
 
                 Text(title)
                     .font(.system(size: 13))
 
                 Spacer(minLength: 0)
+
+                if isOn.wrappedValue {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 11, weight: .semibold))
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(Rectangle())
