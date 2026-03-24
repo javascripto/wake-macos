@@ -4,9 +4,6 @@ import SwiftUI
 enum WakeIconKind {
     case statusActive
     case statusInactive
-    case power
-    case activity
-    case quit
 }
 
 struct WakeIconView: View {
@@ -23,12 +20,6 @@ struct WakeIconView: View {
                     sunriseIcon(size: size, lineWidth: lineWidth, slashed: false)
                 case .statusInactive:
                     sunriseIcon(size: size, lineWidth: lineWidth, slashed: true)
-                case .power:
-                    powerIcon(size: size, lineWidth: lineWidth)
-                case .activity:
-                    activityIcon(size: size, lineWidth: lineWidth)
-                case .quit:
-                    quitIcon(size: size, lineWidth: lineWidth)
                 }
             }
             .frame(width: size, height: size)
@@ -70,65 +61,6 @@ struct WakeIconView: View {
             }
         }
         .scaleEffect(0.95)
-    }
-
-    private func powerIcon(size: CGFloat, lineWidth: CGFloat) -> some View {
-        ZStack {
-            Path { path in
-                path.addArc(
-                    center: point(0.5, 0.56, in: size),
-                    radius: size * 0.28,
-                    startAngle: .degrees(38),
-                    endAngle: .degrees(322),
-                    clockwise: false
-                )
-            }
-            .stroke(style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
-
-            Path { path in
-                path.move(to: point(0.5, 0.12, in: size))
-                path.addLine(to: point(0.5, 0.46, in: size))
-            }
-            .stroke(style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
-        }
-    }
-
-    private func activityIcon(size: CGFloat, lineWidth: CGFloat) -> some View {
-        ZStack {
-            Path { path in
-                path.move(to: point(0.16, 0.62, in: size))
-                path.addLine(to: point(0.31, 0.62, in: size))
-                path.addLine(to: point(0.41, 0.38, in: size))
-                path.addLine(to: point(0.53, 0.72, in: size))
-                path.addLine(to: point(0.63, 0.5, in: size))
-                path.addLine(to: point(0.84, 0.5, in: size))
-            }
-            .stroke(style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
-
-            Path { path in
-                path.addRoundedRect(
-                    in: CGRect(x: size * 0.1, y: size * 0.24, width: size * 0.8, height: size * 0.56),
-                    cornerSize: CGSize(width: size * 0.18, height: size * 0.18)
-                )
-            }
-            .stroke(style: StrokeStyle(lineWidth: lineWidth * 0.82, lineCap: .round, lineJoin: .round))
-        }
-    }
-
-    private func quitIcon(size: CGFloat, lineWidth: CGFloat) -> some View {
-        ZStack {
-            Circle()
-                .stroke(style: StrokeStyle(lineWidth: lineWidth))
-
-            Path { path in
-                path.move(to: point(0.34, 0.34, in: size))
-                path.addLine(to: point(0.66, 0.66, in: size))
-                path.move(to: point(0.66, 0.34, in: size))
-                path.addLine(to: point(0.34, 0.66, in: size))
-            }
-            .stroke(style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
-        }
-        .scaleEffect(0.86)
     }
 
     private func ray(from start: CGPoint, to end: CGPoint, lineWidth: CGFloat) -> some View {

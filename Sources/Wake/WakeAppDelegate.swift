@@ -1,30 +1,34 @@
 import AppKit
 import Combine
-import SwiftUI
 
 @MainActor
 final class WakeAppDelegate: NSObject, NSApplicationDelegate {
     private let viewModel = WakeViewModel()
     private var statusItemController: WakeStatusItemController?
-    private var isActiveCancellable: AnyCancellable?
+    private var stateCancellable: AnyCancellable?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItemController = WakeStatusItemController(
             statusItem: statusItem,
-            makePopoverContent: { [viewModel] in
-                AnyView(WakeMenuBarView(model: viewModel))
-            },
             onToggleWake: { [viewModel] in
                 viewModel.toggleWake()
+            },
+            onToggleUserActivity: { [viewModel] in
+                viewModel.toggleUserActivity()
+            },
+            onQuit: { [viewModel] in
+                viewModel.quit()
             }
         )
 
-        isActiveCancellable = viewModel.$isActive.sink { [weak self] isActive in
-            self?.statusItemController?.update(isActive: isActive)
-        }
-
-        statusItemController?.update(isActive: viewModel.isActive)
+        stateCancellable = Publishers.CombineLatest(viewModel.$isActive, viewModel.$isUserActivityEnabled)
+            .sink { [weak self] isActive, isUserActivityEnabled in
+                self?.statusItemController?.update(
+                    isActive: isActive,
+                    isUserActivityEnabled: isUserActivityEnabled
+                )
+            }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
