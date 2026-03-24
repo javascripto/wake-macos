@@ -15,7 +15,7 @@ final class WakeAppDelegate: NSObject, NSApplicationDelegate {
                 viewModel.toggleWake()
             },
             onToggleUserActivity: { [viewModel] in
-                viewModel.toggleUserActivity()
+                viewModel.setUserActivityEnabled(!viewModel.isUserActivityEnabled)
             },
             onQuit: { [viewModel] in
                 viewModel.quit()
@@ -23,11 +23,9 @@ final class WakeAppDelegate: NSObject, NSApplicationDelegate {
         )
 
         stateCancellable = Publishers.CombineLatest(viewModel.$isActive, viewModel.$isUserActivityEnabled)
-            .sink { [weak self] isActive, isUserActivityEnabled in
-                self?.statusItemController?.update(
-                    isActive: isActive,
-                    isUserActivityEnabled: isUserActivityEnabled
-                )
+            .map { WakeMenuState(isActive: $0, isUserActivityEnabled: $1) }
+            .sink { [weak self] menuState in
+                self?.statusItemController?.update(menuState: menuState)
             }
     }
 

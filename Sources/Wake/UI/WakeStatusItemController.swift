@@ -5,15 +5,6 @@ final class WakeStatusItemController: NSObject {
     private enum UI {
         static let iconSize = NSSize(width: 18, height: 18)
         static let quitTitle = "Sair"
-        static let enableTitle = "Ativar Wake"
-        static let disableTitle = "Desativar Wake"
-        static let userActivityTitle = "Manter atividade do usuário"
-    }
-
-    private struct MenuContent {
-        let title: String
-        let subtitle: String
-        let toggleTitle: String
     }
 
     private let onToggleWake: () -> Void
@@ -42,20 +33,18 @@ final class WakeStatusItemController: NSObject {
         configure()
     }
 
-    func update(isActive: Bool, isUserActivityEnabled: Bool) {
-        let content = menuContent(isActive: isActive)
-
-        if let image = WakeStatusIconRenderer.makeImage(isActive: isActive, size: UI.iconSize, accessibilityDescription: content.title) {
+    func update(menuState: WakeMenuState) {
+        if let image = WakeStatusIconRenderer.makeImage(isActive: menuState.isActive, size: UI.iconSize, accessibilityDescription: menuState.tooltip) {
             statusItem.button?.image = image
         }
 
-        statusItem.button?.toolTip = content.title
-        titleItem.title = content.title
-        subtitleItem.title = content.subtitle
-        toggleWakeItem.title = content.toggleTitle
-        toggleWakeItem.state = isActive ? .on : .off
-        toggleUserActivityItem.title = UI.userActivityTitle
-        toggleUserActivityItem.state = isUserActivityEnabled ? .on : .off
+        statusItem.button?.toolTip = menuState.tooltip
+        titleItem.title = menuState.tooltip
+        subtitleItem.title = menuState.subtitle
+        toggleWakeItem.title = menuState.toggleTitle
+        toggleWakeItem.state = menuState.isActive ? .on : .off
+        toggleUserActivityItem.title = menuState.userActivityTitle
+        toggleUserActivityItem.state = menuState.isUserActivityEnabled ? .on : .off
     }
 
     private func configure() {
@@ -64,35 +53,24 @@ final class WakeStatusItemController: NSObject {
         titleItem.isEnabled = false
         subtitleItem.isEnabled = false
 
-        toggleWakeItem.target = self
-        toggleWakeItem.action = #selector(handleToggleWake)
-
-        toggleUserActivityItem.target = self
-        toggleUserActivityItem.action = #selector(handleToggleUserActivity)
-
-        quitItem.title = UI.quitTitle
-        quitItem.keyEquivalent = "q"
-        quitItem.target = self
-        quitItem.action = #selector(handleQuit)
-
         menu.autoenablesItems = false
         menu.items = [
             titleItem,
             subtitleItem,
             .separator(),
-            toggleWakeItem,
-            toggleUserActivityItem,
+            makeMenuItem(title: "", action: #selector(handleToggleWake), item: toggleWakeItem),
+            makeMenuItem(title: "", action: #selector(handleToggleUserActivity), item: toggleUserActivityItem),
             .separator(),
-            quitItem,
+            makeMenuItem(title: UI.quitTitle, action: #selector(handleQuit), keyEquivalent: "q", item: quitItem),
         ]
 
         button.imagePosition = .imageOnly
-        button.toolTip = menuContent(isActive: false).title
+        button.toolTip = WakeMenuState(isActive: false, isUserActivityEnabled: false).tooltip
         button.target = self
         button.action = #selector(handleStatusItemClick(_:))
         button.sendAction(on: [.leftMouseUp, .rightMouseUp])
 
-        update(isActive: false, isUserActivityEnabled: false)
+        update(menuState: WakeMenuState(isActive: false, isUserActivityEnabled: false))
     }
 
     @objc
@@ -120,28 +98,21 @@ final class WakeStatusItemController: NSObject {
     }
 
     @objc
-    private func handleToggleUserActivity() {
-        onToggleUserActivity()
-    }
+    private func handleToggleUserActivity() { onToggleUserActivity() }
 
     @objc
-    private func handleQuit() {
-        onQuit()
-    }
+    private func handleQuit() { onQuit() }
 
-    private func menuContent(isActive: Bool) -> MenuContent {
-        if isActive {
-            return MenuContent(
-                title: "Wake ativo",
-                subtitle: "O Mac está sendo mantido acordado.",
-                toggleTitle: UI.disableTitle
-            )
-        }
-
-        return MenuContent(
-            title: "Wake inativo",
-            subtitle: "Ative para impedir repouso do sistema e da tela.",
-            toggleTitle: UI.enableTitle
-        )
+    private func makeMenuItem(
+        title: String,
+        action: Selector,
+        keyEquivalent: String = "",
+        item: NSMenuItem
+    ) -> NSMenuItem {
+        item.title = title
+        item.keyEquivalent = keyEquivalent
+        item.target = self
+        item.action = action
+        return item
     }
 }

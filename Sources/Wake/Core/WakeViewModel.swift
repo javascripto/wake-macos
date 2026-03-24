@@ -13,8 +13,9 @@ final class WakeViewModel: ObservableObject {
         isActive ? deactivate() : activate()
     }
 
-    func toggleUserActivity() {
-        isUserActivityEnabled.toggle()
+    func setUserActivityEnabled(_ isEnabled: Bool) {
+        guard isUserActivityEnabled != isEnabled else { return }
+        isUserActivityEnabled = isEnabled
 
         if isActive {
             refreshActivation(reportUserActivity: isUserActivityEnabled)
