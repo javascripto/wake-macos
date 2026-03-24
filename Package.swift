@@ -9,15 +9,31 @@ let package = Package(
     products: [
         .executable(
             name: "Wake",
-            targets: ["Wake"]
+            targets: ["WakeApp"]
+        ),
+        .executable(
+            name: "WakeChecks",
+            targets: ["WakeChecks"]
+        ),
+        .library(
+            name: "WakeCore",
+            targets: ["WakeCore"]
         ),
     ],
     targets: [
-        .executableTarget(
-            name: "Wake",
+        .target(
+            name: "WakeCore",
             linkerSettings: [
                 .linkedFramework("IOKit"),
             ]
+        ),
+        .executableTarget(
+            name: "WakeApp",
+            dependencies: ["WakeCore"]
+        ),
+        .executableTarget(
+            name: "WakeChecks",
+            dependencies: ["WakeCore"]
         ),
     ]
 )

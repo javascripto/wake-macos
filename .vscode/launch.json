@@ -19,6 +19,26 @@
       "target": "Wake",
       "configuration": "release",
       "preLaunchTask": "swift: Build Release Wake"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:wake}",
+      "name": "Debug WakeChecks",
+      "target": "WakeChecks",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug WakeChecks"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:wake}",
+      "name": "Release WakeChecks",
+      "target": "WakeChecks",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release WakeChecks"
     }
   ]
 }

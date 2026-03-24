@@ -54,6 +54,7 @@ Or use `make` shortcuts:
 ```bash
 make build
 make run
+make checks
 make dmg
 make release
 ```

@@ -1,9 +1,10 @@
-.PHONY: help build run dmg release clean tag create_release_tag
+.PHONY: help build run checks dmg release clean tag create_release_tag
 
 help:
 	@printf '%s\n' "Available targets:"
 	@printf '%s\n' "  make build    Build the .app bundle"
 	@printf '%s\n' "  make run      Build and open the app"
+	@printf '%s\n' "  make checks   Run the package checks"
 	@printf '%s\n' "  make dmg      Build the .dmg package"
 	@printf '%s\n' "  make release  Build the app and the .dmg"
 	@printf '%s\n' "  make tag VERSION=1.2.3            Create and push v1.2.3"
@@ -17,6 +18,9 @@ open:
 	@open dist/Wake.app
 
 run: build open
+
+checks:
+	@swift run WakeChecks
 
 dmg:
 	@./scripts/create_dmg.sh
