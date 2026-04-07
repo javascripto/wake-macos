@@ -15,11 +15,23 @@ extension WakeController: WakeControlling {}
 public final class WakeViewModel: ObservableObject {
     @Published public private(set) var isActive = false
     @Published public var isUserActivityEnabled = false
+    @Published public private(set) var startsActive = false
+    @Published public private(set) var launchesAtLogin = false
 
     private let wakeController: WakeControlling
+    private let preferences: WakePreferencesManaging
+    private let launchAtLoginController: LaunchAtLoginControlling
 
-    public init(wakeController: WakeControlling) {
+    init(
+        wakeController: WakeControlling,
+        preferences: WakePreferencesManaging = WakePreferences(),
+        launchAtLoginController: LaunchAtLoginControlling = LaunchAtLoginController()
+    ) {
         self.wakeController = wakeController
+        self.preferences = preferences
+        self.launchAtLoginController = launchAtLoginController
+        startsActive = preferences.startsActive
+        launchesAtLogin = launchAtLoginController.launchesAtLogin
     }
 
     public func toggleWake() {
@@ -33,6 +45,17 @@ public final class WakeViewModel: ObservableObject {
         if isActive {
             refreshActivation(reportUserActivity: isUserActivityEnabled)
         }
+    }
+
+    public func setStartsActive(_ isEnabled: Bool) {
+        guard startsActive != isEnabled else { return }
+        startsActive = isEnabled
+        preferences.startsActive = isEnabled
+    }
+
+    public func setLaunchesAtLogin(_ isEnabled: Bool) {
+        launchAtLoginController.setLaunchesAtLogin(isEnabled)
+        launchesAtLogin = launchAtLoginController.launchesAtLogin
     }
 
     public func activate() {

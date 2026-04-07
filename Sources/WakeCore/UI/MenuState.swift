@@ -3,10 +3,14 @@ import AppKit
 public struct WakeMenuState {
     public let isActive: Bool
     public let isUserActivityEnabled: Bool
+    public let startsActive: Bool
+    public let launchesAtLogin: Bool
 
-    public init(isActive: Bool, isUserActivityEnabled: Bool) {
+    public init(isActive: Bool, isUserActivityEnabled: Bool, startsActive: Bool, launchesAtLogin: Bool) {
         self.isActive = isActive
         self.isUserActivityEnabled = isUserActivityEnabled
+        self.startsActive = startsActive
+        self.launchesAtLogin = launchesAtLogin
     }
 
     public var tooltip: String {
@@ -29,5 +33,21 @@ public struct WakeMenuState {
 
     public var userActivityState: NSControl.StateValue {
         isUserActivityEnabled ? .on : .off
+    }
+
+    public var startsActiveTitle: String {
+        "Iniciar app ativo"
+    }
+
+    public var startsActiveState: NSControl.StateValue {
+        startsActive ? .on : .off
+    }
+
+    public var launchesAtLoginTitle: String {
+        "Iniciar com o macOS"
+    }
+
+    public var launchesAtLoginState: NSControl.StateValue {
+        launchesAtLogin ? .on : .off
     }
 }

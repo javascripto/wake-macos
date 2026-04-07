@@ -9,6 +9,8 @@ final class WakeStatusItemController: NSObject {
 
     private let onToggleWake: () -> Void
     private let onToggleUserActivity: () -> Void
+    private let onToggleStartsActive: () -> Void
+    private let onToggleLaunchAtLogin: () -> Void
     private let onQuit: () -> Void
     private let statusItem: NSStatusItem
     private let menu = NSMenu()
@@ -16,17 +18,23 @@ final class WakeStatusItemController: NSObject {
     private let subtitleItem = NSMenuItem()
     private let toggleWakeItem = NSMenuItem()
     private let toggleUserActivityItem = NSMenuItem()
+    private let toggleStartsActiveItem = NSMenuItem()
+    private let toggleLaunchAtLoginItem = NSMenuItem()
     private let quitItem = NSMenuItem()
 
     init(
         statusItem: NSStatusItem,
         onToggleWake: @escaping () -> Void,
         onToggleUserActivity: @escaping () -> Void,
+        onToggleStartsActive: @escaping () -> Void,
+        onToggleLaunchAtLogin: @escaping () -> Void,
         onQuit: @escaping () -> Void
     ) {
         self.statusItem = statusItem
         self.onToggleWake = onToggleWake
         self.onToggleUserActivity = onToggleUserActivity
+        self.onToggleStartsActive = onToggleStartsActive
+        self.onToggleLaunchAtLogin = onToggleLaunchAtLogin
         self.onQuit = onQuit
 
         super.init()
@@ -45,6 +53,10 @@ final class WakeStatusItemController: NSObject {
         toggleWakeItem.state = menuState.isActive ? .on : .off
         toggleUserActivityItem.title = menuState.userActivityTitle
         toggleUserActivityItem.state = menuState.userActivityState
+        toggleStartsActiveItem.title = menuState.startsActiveTitle
+        toggleStartsActiveItem.state = menuState.startsActiveState
+        toggleLaunchAtLoginItem.title = menuState.launchesAtLoginTitle
+        toggleLaunchAtLoginItem.state = menuState.launchesAtLoginState
     }
 
     private func configure() {
@@ -60,17 +72,19 @@ final class WakeStatusItemController: NSObject {
             .separator(),
             menuItem(title: "", action: #selector(handleToggleWake), item: toggleWakeItem),
             menuItem(title: "", action: #selector(handleToggleUserActivity), item: toggleUserActivityItem),
+            menuItem(title: "", action: #selector(handleToggleStartsActive), item: toggleStartsActiveItem),
+            menuItem(title: "", action: #selector(handleToggleLaunchAtLogin), item: toggleLaunchAtLoginItem),
             .separator(),
             menuItem(title: UI.quitTitle, action: #selector(handleQuit), keyEquivalent: "q", item: quitItem),
         ]
 
         button.imagePosition = .imageOnly
-        button.toolTip = WakeMenuState(isActive: false, isUserActivityEnabled: false).tooltip
+        button.toolTip = WakeMenuState(isActive: false, isUserActivityEnabled: false, startsActive: false, launchesAtLogin: false).tooltip
         button.target = self
         button.action = #selector(handleStatusItemClick(_:))
         button.sendAction(on: [.leftMouseUp, .rightMouseUp])
 
-        update(menuState: WakeMenuState(isActive: false, isUserActivityEnabled: false))
+        update(menuState: WakeMenuState(isActive: false, isUserActivityEnabled: false, startsActive: false, launchesAtLogin: false))
     }
 
     @objc
@@ -99,6 +113,12 @@ final class WakeStatusItemController: NSObject {
 
     @objc
     private func handleToggleUserActivity() { onToggleUserActivity() }
+
+    @objc
+    private func handleToggleStartsActive() { onToggleStartsActive() }
+
+    @objc
+    private func handleToggleLaunchAtLogin() { onToggleLaunchAtLogin() }
 
     @objc
     private func handleQuit() { onQuit() }

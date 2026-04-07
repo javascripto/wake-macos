@@ -21,6 +21,7 @@ let package = Package(
             name: "WakeCore",
             linkerSettings: [
                 .linkedFramework("IOKit"),
+                .linkedFramework("ServiceManagement"),
             ]
         ),
         .executableTarget(

@@ -19,16 +19,31 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
             onToggleUserActivity: { [viewModel] in
                 viewModel.setUserActivityEnabled(!viewModel.isUserActivityEnabled)
             },
+            onToggleStartsActive: { [viewModel] in
+                viewModel.setStartsActive(!viewModel.startsActive)
+            },
+            onToggleLaunchAtLogin: { [viewModel] in
+                viewModel.setLaunchesAtLogin(!viewModel.launchesAtLogin)
+            },
             onQuit: { [viewModel] in
                 viewModel.quit()
             }
         )
 
-        stateCancellable = Publishers.CombineLatest(viewModel.$isActive, viewModel.$isUserActivityEnabled)
-            .map { WakeMenuState(isActive: $0, isUserActivityEnabled: $1) }
+        stateCancellable = Publishers.CombineLatest4(
+            viewModel.$isActive,
+            viewModel.$isUserActivityEnabled,
+            viewModel.$startsActive,
+            viewModel.$launchesAtLogin
+        )
+            .map { WakeMenuState(isActive: $0, isUserActivityEnabled: $1, startsActive: $2, launchesAtLogin: $3) }
             .sink { [weak self] menuState in
                 self?.statusItemController?.update(menuState: menuState)
             }
+
+        if viewModel.startsActive {
+            viewModel.activate()
+        }
     }
 
     public func applicationWillTerminate(_ notification: Notification) {
